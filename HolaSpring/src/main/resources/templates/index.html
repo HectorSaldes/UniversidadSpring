@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+</head>
+<body>
+
+<!--? Usar la plantilla creada-->
+<header th:replace="layout/plantilla :: header"/>
+
+<!--<p th:text="${mensaje}"></p>-->
+<!--<p th:text="${saludo}"></p>-->
+
+<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/agregar}">Crear persona</a>
+
+<br>
+
+<div th:if="${personas!=null && !personas.empty}">
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+        </tr>
+
+        <tr th:each="persona:${personas}">
+            <td><span th:text="${persona.nombre}"></span></td>
+            <td><span th:text="${persona.apellido}"></span></td>
+            <td><span th:text="${persona.email}"></span></td>
+            <td><span th:text="${persona.telefono}"></span></td>
+                                                                <!-- * PATH-->
+            <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/editar/} + ${persona.idPersona}" th:text="Editar"/>
+            </td>
+                                                                <!-- * QUERY-->
+            <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/eliminar(idPersona=${persona.idPersona})}"
+                                                         th:text="Eliminar"/></td>
+        </tr>
+    </table>
+</div>
+
+<div th:if="${personas==null || personas.empty}">
+    <p>La lista de personas está vacía</p>
+</div>
+
+
+<footer th:replace="layout/plantilla :: footer"/>
+
+</body>
+</html>
